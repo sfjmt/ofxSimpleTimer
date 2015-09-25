@@ -18,10 +18,11 @@ public:
     ofxSimpleTimer();
     ~ofxSimpleTimer();
     
-    static ofEvent<ofEventArgs> TIMER_COMPLETE;
+    static ofEvent<string> TIMER_COMPLETE;
 
     void update();
     
+    void setName(string name);
     void setTime(int time, int loopCount);
     
     void start();
@@ -44,6 +45,7 @@ private:
     bool PAUSE;
     bool DEBUG_ENABLED;
     int LOOP_TOTAL;
+    string NAME;
     
     float _timer;
     float _timer_startTime;
@@ -56,4 +58,4 @@ private:
     
 };
 
-#endif /* defined(__ProenzaSchouler_SyncSignage__ofxSimpleTimer__) */
+#endif

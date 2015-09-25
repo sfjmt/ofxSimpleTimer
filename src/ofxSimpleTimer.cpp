@@ -7,7 +7,7 @@
 
 #include "ofxSimpleTimer.h"
 
-ofEvent<ofEventArgs> ofxSimpleTimer::TIMER_COMPLETE = ofEvent<ofEventArgs>();
+ofEvent<string> ofxSimpleTimer::TIMER_COMPLETE = ofEvent<string>();
 
 ofxSimpleTimer::ofxSimpleTimer()
 {
@@ -17,6 +17,12 @@ ofxSimpleTimer::ofxSimpleTimer()
 ofxSimpleTimer::~ofxSimpleTimer()
 {
     cout << "   [ofxSimpleTimer] close." << endl;
+}
+
+//--------------------------------------------------------------
+void ofxSimpleTimer::setName(string name)
+{
+    NAME = name;
 }
 
 //--------------------------------------------------------------
@@ -179,7 +185,6 @@ void ofxSimpleTimer::update()
 //--------------------------------------------------------------
 void ofxSimpleTimer::dispatch()
 {
-    static ofEventArgs timerEventArgs;
-    ofNotifyEvent(TIMER_COMPLETE, timerEventArgs, this);
+    ofNotifyEvent(TIMER_COMPLETE, NAME);
 }
 
