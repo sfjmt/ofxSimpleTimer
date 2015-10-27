@@ -1,46 +1,54 @@
-#include "ofApp.h"
+#include "example_ofxSimpleTimer.h"
 
 //--------------------------------------------------------------
-void ofApp::setup(){
+void example_ofxSimpleTimer::setup(){
 
     ofBackground(0);
     ofSetWindowShape(300, 300);
     
     // set
     _timer.setTime(1000, 3);
+    _timer.setName("test");
 //    _timer.setTime(1000, 0);// infinity loop...
     
     // add listener
-    ofAddListener(ofxSimpleTimer::TIMER_COMPLETE, this, &ofApp::timerComplete);
+    ofAddListener(ofxSimpleTimer::TIMER_COMPLETE, this, &example_ofxSimpleTimer::timerComplete);
     
 }
 
 //--------------------------------------------------------------
-void ofApp::timerComplete(ofEventArgs &event)
+void example_ofxSimpleTimer::timerComplete(string &name)
 {
     int currentCount = _timer.getLoopCurrentCount();
     int totalCount = _timer.getLoopTotalCount();
     
-    if(currentCount==totalCount)
+    if(name=="test")
     {
-        cout << currentCount << "/" << totalCount << endl;
-        cout << "*** Complete ***" << endl;
+        if(currentCount==totalCount)
+        {
+            cout << currentCount << "/" << totalCount << endl;
+            cout << "*** Complete ***" << endl;
+        }
+        else
+        {
+            cout << currentCount << "/" << totalCount << endl;
+        }
     }
     else
     {
-        cout << currentCount << "/" << totalCount << endl;
+        // ignore
     }
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
+void example_ofxSimpleTimer::update(){
 
     _timer.update();
     
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void example_ofxSimpleTimer::draw(){
 
     float currentTime = _timer.getCurrentTime();
     float totalTime = _timer.getTotalTime();
@@ -56,7 +64,7 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void example_ofxSimpleTimer::keyReleased(int key){
 
     if(key=='1')
     {

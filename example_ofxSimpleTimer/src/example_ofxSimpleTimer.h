@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxSimpleTimer.h"
 
-class ofApp : public ofBaseApp{
+class example_ofxSimpleTimer : public ofBaseApp{
 
 	public:
 		void setup();
@@ -15,7 +15,7 @@ class ofApp : public ofBaseApp{
     ofxSimpleTimer _timer;
     
     // listener
-    void timerComplete(ofEventArgs & event);
+    void timerComplete(string & name);
 		
     // flag
     bool DEBUG;

@@ -11,12 +11,12 @@ ofEvent<string> ofxSimpleTimer::TIMER_COMPLETE = ofEvent<string>();
 
 ofxSimpleTimer::ofxSimpleTimer()
 {
-    cout << "   [ofxSimpleTimer] open." << endl;
+//    cout << "   [ofxSimpleTimer] open." << endl;
 }
 
 ofxSimpleTimer::~ofxSimpleTimer()
 {
-    cout << "   [ofxSimpleTimer] close." << endl;
+//    cout << "   [ofxSimpleTimer] close." << endl;
 }
 
 //--------------------------------------------------------------
@@ -28,7 +28,7 @@ void ofxSimpleTimer::setName(string name)
 //--------------------------------------------------------------
 void ofxSimpleTimer::setTime(int time, int loopCount)
 {
-    if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::setTime]" << endl;
+    //if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::setTime]" << endl;
     
     reset();
     
