@@ -5,8 +5,8 @@
 //
 //
 
-#ifndef __ProenzaSchouler_SyncSignage__ofxSimpleTimer__
-#define __ProenzaSchouler_SyncSignage__ofxSimpleTimer__
+#ifndef __ofxSimpleTimer__
+#define __ofxSimpleTimer__
 
 #include "ofMain.h"
 
