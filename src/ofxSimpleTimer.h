@@ -20,22 +20,22 @@ public:
     
     static ofEvent<string> TIMER_COMPLETE;
 
-    void update();
-    
-    void setName(string name);
-    void setTime(int time, int loopCount);
-    
-    void start();
-    void pause();
-    void reset();
-    
     int getLoopCurrentCount();
     int getLoopTotalCount();
     float getCurrentTime();
     float getTotalTime();
     
+    void setName(string name);
+    void setTime(int time, int loopCount);
+    
     void debugStart();
     void debugStop();
+    void pause();
+    void reset();
+    void start();
+    
+    void update();
+    void drawStatus(ofPoint pos);
     
 private:
     
@@ -54,7 +54,7 @@ private:
     float _timer_pauseDistanceTime;
     bool _timer_reached;
     
-    int _loopCounter;
+    int _loopCounter;    
     
 };
 

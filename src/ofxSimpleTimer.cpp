@@ -20,12 +20,36 @@ ofxSimpleTimer::~ofxSimpleTimer()
 }
 
 //--------------------------------------------------------------
+// getter
+//--------------------------------------------------------------
+int ofxSimpleTimer::getLoopCurrentCount()
+{
+    return _loopCounter;
+}
+
+int ofxSimpleTimer::getLoopTotalCount()
+{
+    return LOOP_TOTAL;
+}
+
+float ofxSimpleTimer::getCurrentTime()
+{
+    return _timer;
+}
+
+float ofxSimpleTimer::getTotalTime()
+{
+    return _timer_endTime;
+}
+
+//--------------------------------------------------------------
+// setter
+//--------------------------------------------------------------
 void ofxSimpleTimer::setName(string name)
 {
     NAME = name;
 }
 
-//--------------------------------------------------------------
 void ofxSimpleTimer::setTime(int time, int loopCount)
 {
     //if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::setTime]" << endl;
@@ -37,42 +61,18 @@ void ofxSimpleTimer::setTime(int time, int loopCount)
 }
 
 //--------------------------------------------------------------
-int ofxSimpleTimer::getLoopCurrentCount()
-{
-    return _loopCounter;
-}
-
-//--------------------------------------------------------------
-int ofxSimpleTimer::getLoopTotalCount()
-{
-    return LOOP_TOTAL;
-}
-
-//--------------------------------------------------------------
-float ofxSimpleTimer::getCurrentTime()
-{
-    return _timer;
-}
-
-//--------------------------------------------------------------
-float ofxSimpleTimer::getTotalTime()
-{
-    return _timer_endTime;
-}
-
+// func
 //--------------------------------------------------------------
 void ofxSimpleTimer::debugStart()
 {
     DEBUG_ENABLED = true;
 }
 
-//--------------------------------------------------------------
 void ofxSimpleTimer::debugStop()
 {
     DEBUG_ENABLED = false;
 }
 
-//--------------------------------------------------------------
 void ofxSimpleTimer::pause()
 {
     if(!_timer_reached)
@@ -97,7 +97,6 @@ void ofxSimpleTimer::pause()
     }
 }
 
-//--------------------------------------------------------------
 void ofxSimpleTimer::reset()
 {
     if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::reset]" << endl;
@@ -110,7 +109,6 @@ void ofxSimpleTimer::reset()
     _timer = 0;
 }
 
-//--------------------------------------------------------------
 void ofxSimpleTimer::start()
 {
     if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::restart]" << endl;
@@ -124,6 +122,8 @@ void ofxSimpleTimer::start()
     _timer_startTime = ofGetElapsedTimeMillis();
 }
 
+//--------------------------------------------------------------
+// update
 //--------------------------------------------------------------
 void ofxSimpleTimer::update()
 {
@@ -182,6 +182,29 @@ void ofxSimpleTimer::update()
     }
 }
 
+//--------------------------------------------------------------
+// draw
+//--------------------------------------------------------------
+void ofxSimpleTimer::drawStatus(ofPoint pos)
+{
+    int bar_width = 250;
+    int bar_height = 5;
+
+    ofSetColor(255);
+    ofDrawBitmapStringHighlight(NAME+" Set Time(ms) : "+ofToString(_timer_endTime), pos.x, pos.y);
+    ofDrawBitmapStringHighlight(NAME+" Current Status(ms) : "+ofToString(getCurrentTime())+" / "+ofToString(getTotalTime()), pos.x, pos.y+20);
+    
+    ofSetColor(0, 255, 255);
+    ofNoFill();
+    ofRect(pos.x, pos.y+35, bar_width, bar_height);
+    
+    ofSetColor(0, 255, 255);
+    ofFill();
+    ofRect(pos.x, pos.y+35, bar_width*(getCurrentTime()/getTotalTime()), bar_height);
+}
+
+//--------------------------------------------------------------
+// PRIVATE
 //--------------------------------------------------------------
 void ofxSimpleTimer::dispatch()
 {
