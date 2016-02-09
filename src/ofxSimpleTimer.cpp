@@ -11,12 +11,28 @@ ofEvent<string> ofxSimpleTimer::TIMER_COMPLETE = ofEvent<string>();
 
 ofxSimpleTimer::ofxSimpleTimer()
 {
-//    cout << "   [ofxSimpleTimer] open." << endl;
+    // init
+    
+    UPDATE_ENABLED = false;
+    PAUSE          = false;
+    DEBUG_ENABLED  = false;
+    
+    LOOP_TOTAL = 0;
+    
+    NAME = "";
+    
+    _timer                   = 0;
+    _timer_startTime         = 0;
+    _timer_endTime           = 0;
+    _timer_pauseTime         = 0;
+    _timer_pauseDistanceTime = 0;
+    _timer_reached = false;
+    
+    _loopCounter = 0;
 }
 
 ofxSimpleTimer::~ofxSimpleTimer()
 {
-//    cout << "   [ofxSimpleTimer] close." << endl;
 }
 
 //--------------------------------------------------------------
@@ -52,8 +68,6 @@ void ofxSimpleTimer::setName(string name)
 
 void ofxSimpleTimer::setTime(int time, int loopCount)
 {
-    //if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::setTime]" << endl;
-    
     reset();
     
     _timer_endTime = time;
@@ -194,13 +208,21 @@ void ofxSimpleTimer::drawStatus(ofPoint pos)
     ofDrawBitmapStringHighlight(NAME+" Set Time(ms) : "+ofToString(_timer_endTime), pos.x, pos.y);
     ofDrawBitmapStringHighlight(NAME+" Current Status(ms) : "+ofToString(getCurrentTime())+" / "+ofToString(getTotalTime()), pos.x, pos.y+20);
     
-    ofSetColor(0, 255, 255);
-    ofNoFill();
-    ofRect(pos.x, pos.y+35, bar_width, bar_height);
     
-    ofSetColor(0, 255, 255);
+    ofSetColor(0);
+    ofNoFill();
+    ofDrawRectangle(pos.x, pos.y+35, bar_width, bar_height);
+    
+    if(_timer_reached)
+    {
+        ofSetColor(0, 255, 255);
+    }
+    else
+    {
+        ofSetColor(255, 50, 0);
+    }
     ofFill();
-    ofRect(pos.x, pos.y+35, bar_width*(getCurrentTime()/getTotalTime()), bar_height);
+    ofDrawRectangle(pos.x, pos.y+35, bar_width*(getCurrentTime()/getTotalTime()), bar_height);
 }
 
 //--------------------------------------------------------------
