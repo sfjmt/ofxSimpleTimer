@@ -13,15 +13,19 @@
 template<typename T>
 class ofxSimpleTimer{
 
-private:
-
-  static ofEvent<T> alerm;
-
+public:
   enum STATUS{
     STOP,
     RUN,
     PAUSE
-  } status;
+  };
+
+
+private:
+
+  static ofEvent<T> alerm;
+
+  STATUS status;
 
   struct TIME{
     float current;
@@ -51,9 +55,12 @@ public:
 
     const int LoopCount_Current(void);
     const int LoopCount_End    (void);
-    
+
     const float CurrentTime(void);
     const float EndTime    (void);
+
+    STATUS Status(void);
+    
 
           void ID(const T& _name);
     const T&   ID(void);
@@ -128,6 +135,13 @@ const float ofxSimpleTimer<T> :: EndTime(void){
   return time.start + time.end;
 }
 
+/* ========================================================= *
+ * const STATUS Status(void)                                 *
+ * ========================================================= */
+template<typename T>
+typename ofxSimpleTimer<T> :: STATUS ofxSimpleTimer<T> :: Status(void){
+  return status;
+}
 
 
 
