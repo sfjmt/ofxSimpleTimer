@@ -23,7 +23,7 @@ public:
 
 private:
 
-  static ofEvent<T> alerm;
+  ofEvent<T> alerm;
 
   STATUS status;
 
@@ -84,8 +84,8 @@ private:
 };
 
 
-template<typename T>
-ofEvent<T> ofxSimpleTimer<T> :: alerm = ofEvent<T>();
+//template<typename T>
+//ofEvent<T> ofxSimpleTimer<T> :: alerm = ofEvent<T>();
 
 /* ========================================================= *
  * constructor/destructor                                    *
@@ -264,15 +264,16 @@ const float ofxSimpleTimer<T> :: Update(void){
     time.current = ofGetElapsedTimeMillis();
     end          = time.start + time.end;
 
+    if(loopcount.current >= loopcount.end){
+      Stop();
+      Report();
+      return time.end;
+    }
 
     Report();
     if(loopcount.end == 0) continue;
 
-    if(loopcount.current >= loopcount.end){
-      Stop();
-      return time.current;
-    }
-  }
+      }
 
   return time.current - time.start;
 }
