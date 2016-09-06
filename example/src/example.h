@@ -5,22 +5,20 @@
 
 class example : public ofBaseApp{
 
-	public:
-		void setup();
-		void update();
-		void draw();
+  public:
+    void setup();
+    void exit();
+    void update();
+    void draw();
 
-		void keyReleased(int key);
-		
+    void keyReleased(int key);
+
     string caption();
-    
-    ofxSimpleTimer *_timer;
-    
-    void timerCompelte(string & name);
-    
-    bool DEBUG = false;
-    int _currentCount;
-    int _totalCount;
-    int _currentTime;
-    int _totalTime;
+
+    string notify;
+
+    ofxSimpleTimer<string> timer;
+
+    void timerComplete(string & name);
+
 };
