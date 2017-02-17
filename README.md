@@ -2,14 +2,14 @@
 
 ## Summary
 
-simple timer
+simple timer for openframeworks
 
 ## Develop Tools
 
-* xcode version 6.1.1
-* openframeworks 0.9.1
+* xcode version 7.3.1
+* openframeworks 0.9.8
 * BaseSDK OSX 10.10
 
 ## Support Platform
 
-* OSX 10.10 Yosemite
+* OSX 10.11 El Capitan
