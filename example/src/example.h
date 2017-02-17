@@ -3,24 +3,20 @@
 #include "ofMain.h"
 #include "ofxSimpleTimer.h"
 
-class example : public ofBaseApp{
+class example : public ofBaseApp {
+   public:
+    void setup();
+    void update();
+    void draw();
 
-	public:
-		void setup();
-		void update();
-		void draw();
+    void keyReleased(int key);
 
-		void keyReleased(int key);
-		
-    string caption();
+   private:
+    void listenerTimerCount(string &name);
+    void listenerTimerCompelte(string &name);
+    ofxSimpleTimer *timer;
     
-    ofxSimpleTimer *_timer;
-    
-    void timerCompelte(string & name);
-    
-    bool DEBUG = false;
-    int _currentCount;
-    int _totalCount;
-    int _currentTime;
-    int _totalTime;
+    string timer_name = "myTimer";
+    int duration = 10000;
+    int repeat_count = 3;
 };
