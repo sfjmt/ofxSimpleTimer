@@ -7,229 +7,97 @@
 
 #include "ofxSimpleTimer.h"
 
+ofEvent<string> ofxSimpleTimer::TIMER_COUNT = ofEvent<string>();
 ofEvent<string> ofxSimpleTimer::TIMER_COMPLETE = ofEvent<string>();
 
-ofxSimpleTimer::ofxSimpleTimer()
-{
-    // init
-    
-    UPDATE_ENABLED = false;
-    PAUSE          = false;
-    DEBUG_ENABLED  = false;
-    
-    LOOP_TOTAL = 0;
-    
-    NAME = "";
-    
-    _timer                   = 0;
-    _timer_startTime         = 0;
-    _timer_endTime           = 0;
-    _timer_pauseTime         = 0;
-    _timer_pauseDistanceTime = 0;
-    _timer_reached = false;
-    
-    _loopCounter = 0;
-}
+//--------------------------------------------------------------
+void ofxSimpleTimer::setName(string name) { timer_name = name; }
 
-ofxSimpleTimer::~ofxSimpleTimer()
-{
+//--------------------------------------------------------------
+void ofxSimpleTimer::setTime(int duration, int repeat_count) {
+    this->duration = duration;
+    this->repeat_count = repeat_count;
 }
 
 //--------------------------------------------------------------
-// getter
-//--------------------------------------------------------------
-int ofxSimpleTimer::getLoopCurrentCount()
-{
-    return _loopCounter;
-}
-
-int ofxSimpleTimer::getLoopTotalCount()
-{
-    return LOOP_TOTAL;
-}
-
-float ofxSimpleTimer::getCurrentTime()
-{
-    return _timer;
-}
-
-float ofxSimpleTimer::getTotalTime()
-{
-    return _timer_endTime;
+void ofxSimpleTimer::setPosition(int millis) {
+    if (millis >= 0 && millis <= duration) {
+        time_move_distance += millis - current_time;
+        current_time = millis;
+    };
 }
 
 //--------------------------------------------------------------
-// setter
-//--------------------------------------------------------------
-void ofxSimpleTimer::setName(string name)
-{
-    NAME = name;
+void ofxSimpleTimer::pause() {
+    time_move_distance = 0;
+    flag_update_enabled = !flag_update_enabled;
 }
 
-void ofxSimpleTimer::setTime(int time, int loopCount)
-{
+//--------------------------------------------------------------
+void ofxSimpleTimer::reset() {
+    flag_update_enabled = false;
+    flag_time_reached = false;
+
+    current_time = 0;
+    time_start = 0;
+    time_pause_distance = 0;
+    time_move_distance = 0;
+
+    counter = 0;
+}
+
+//--------------------------------------------------------------
+void ofxSimpleTimer::start() {
+    if (!flag_update_enabled) {
+        flag_update_enabled = true;
+        flag_time_reached = false;
+
+        time_start = ofGetElapsedTimeMillis();
+
+        counter = 0;
+    }
+}
+
+//--------------------------------------------------------------
+void ofxSimpleTimer::setup(string name, int duration, int repeat_count) {
+    setName(name);
+    setTime(duration, repeat_count);
+
     reset();
-    
-    _timer_endTime = time;
-    LOOP_TOTAL = loopCount;
 }
 
 //--------------------------------------------------------------
-// func
-//--------------------------------------------------------------
-void ofxSimpleTimer::debugStart()
-{
-    DEBUG_ENABLED = true;
-}
+void ofxSimpleTimer::update() {
+    if (flag_update_enabled) {
+        if (!flag_time_reached) {
+            current_time = ofGetElapsedTimeMillis() - time_start - time_pause_distance + time_move_distance;
 
-void ofxSimpleTimer::debugStop()
-{
-    DEBUG_ENABLED = false;
-}
+            if (current_time >= duration) {
+                counter++;
 
-void ofxSimpleTimer::pause()
-{
-    if(!_timer_reached)
-    {
-        if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::pause]" << endl;
-        PAUSE = !PAUSE;
-        
-        if(PAUSE)
-        {
-            UPDATE_ENABLED = false;
-            _timer_pauseTime = ofGetElapsedTimeMillis();
-        }
-        else
-        {
-            UPDATE_ENABLED = true;
-            _timer_pauseDistanceTime = ofGetElapsedTimeMillis() - _timer_pauseTime;
-        }
-    }
-    else
-    {
-        if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::pause] ignore" << endl;
-    }
-}
+                if (counter == repeat_count) {
+                    // initialize
+                    flag_time_reached = true;
+                    current_time = duration;
+                    time_pause_distance = 0;
+                    time_move_distance = 0;
 
-void ofxSimpleTimer::reset()
-{
-    if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::reset]" << endl;
-    
-    UPDATE_ENABLED = false;
-    
-    _loopCounter = 0;
-    
-    _timer_reached = false;
-    _timer = 0;
-}
+                    // notify
+                    ofNotifyEvent(TIMER_COUNT, timer_name);
+                    ofNotifyEvent(TIMER_COMPLETE, timer_name);
+                } else {
+                    // initialize
+                    current_time = 0;
+                    time_pause_distance = 0;
+                    time_move_distance = 0;
+                    time_start = ofGetElapsedTimeMillis();
 
-void ofxSimpleTimer::start()
-{
-    if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer::restart]" << endl;
-    
-    UPDATE_ENABLED = true;
-    
-    _loopCounter = 0;
-    
-    _timer_reached   = false;
-    _timer           = 0;
-    _timer_startTime = ofGetElapsedTimeMillis();
-}
-
-//--------------------------------------------------------------
-// update
-//--------------------------------------------------------------
-void ofxSimpleTimer::update()
-{
-    if(PAUSE)return;
-    
-    if(UPDATE_ENABLED)// update
-    {
-        if(_timer >= _timer_endTime && !_timer_reached)
-        {
-            if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer] timer complete." << endl;
-            
-            // timer complete
-            _timer_reached           = true;
-            _timer                   = _timer_endTime;
-            _timer_pauseTime         = 0;
-            _timer_pauseDistanceTime = 0;
-            
-            // loop
-            if(LOOP_TOTAL==0)// infinity loop...
-            {
-                dispatch();// dispatch
-                start();
-            }
-            else
-            {
-                _loopCounter++;
-                
-                if(_loopCounter == LOOP_TOTAL)// loop complete
-                {
-                    if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer] loop complete. count[" << _loopCounter << "/" << LOOP_TOTAL << "]" << endl;
-                    
-                    dispatch();// dispatch
-                    
-                    _loopCounter = 0;// init
-                }
-                else
-                {
-                    dispatch();// dispatch
-                    
-                    // restart
-                    _timer_reached   = false;
-                    _timer           = 0;
-                    _timer_startTime = ofGetElapsedTimeMillis();
+                    // notify
+                    ofNotifyEvent(TIMER_COUNT, timer_name);
                 }
             }
         }
-        else if(!_timer_reached)
-        {
-            _timer = ofGetElapsedTimeMillis() - _timer_startTime - _timer_pauseDistanceTime;
-            if(DEBUG_ENABLED)cout << "   [ofxSimpleTimer] watching time : " << _timer << endl;
-        }
-    }
-    else
-    {
-        // don't update
+    } else {
+        time_pause_distance = (ofGetElapsedTimeMillis() - time_start) - current_time;
     }
 }
-
-//--------------------------------------------------------------
-// draw
-//--------------------------------------------------------------
-void ofxSimpleTimer::drawStatus(ofPoint pos)
-{
-    int bar_width = 250;
-    int bar_height = 5;
-
-    ofSetColor(255);
-    ofDrawBitmapStringHighlight(NAME+" Set Time(ms) : "+ofToString(_timer_endTime), pos.x, pos.y);
-    ofDrawBitmapStringHighlight(NAME+" Current Status(ms) : "+ofToString(getCurrentTime())+" / "+ofToString(getTotalTime()), pos.x, pos.y+20);
-    
-    
-    ofSetColor(0);
-    ofNoFill();
-    ofDrawRectangle(pos.x, pos.y+35, bar_width, bar_height);
-    
-    if(_timer_reached)
-    {
-        ofSetColor(0, 255, 255);
-    }
-    else
-    {
-        ofSetColor(255, 50, 0);
-    }
-    ofFill();
-    ofDrawRectangle(pos.x, pos.y+35, bar_width*(getCurrentTime()/getTotalTime()), bar_height);
-}
-
-//--------------------------------------------------------------
-// PRIVATE
-//--------------------------------------------------------------
-void ofxSimpleTimer::dispatch()
-{
-    ofNotifyEvent(TIMER_COMPLETE, NAME);
-}
-

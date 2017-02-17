@@ -1,93 +1,48 @@
 #include "example.h"
 
 //--------------------------------------------------------------
-void example::setup(){
+void example::listenerTimerCount(string &name) {
+    ofLogNotice("example::listenerTimerCount") << "name : " << name << ", count : " << timer->getLoopCurrentCount() << " / " << timer->getLoopTotalCount();
+}
 
+//--------------------------------------------------------------
+void example::listenerTimerCompelte(string &name) { ofLogNotice("example::listenerTimerCompelte") << name; }
+
+//--------------------------------------------------------------
+void example::setup() {
     ofSetWindowShape(200, 200);
-    
-    _timer = new ofxSimpleTimer();
-    _timer->setTime(1000, 3);
-    _timer->setName("myTimer");
-    
-    ofAddListener(ofxSimpleTimer::TIMER_COMPLETE, this, &example::timerCompelte);
+
+    timer = new ofxSimpleTimer();
+    timer->setup(timer_name, duration, repeat_count);
+    timer->start();
+
+    ofAddListener(ofxSimpleTimer::TIMER_COUNT, this, &example::listenerTimerCount);
+    ofAddListener(ofxSimpleTimer::TIMER_COMPLETE, this, &example::listenerTimerCompelte);
 }
 
 //--------------------------------------------------------------
-void example::update(){
+void example::update() { timer->update(); }
 
-    _timer->update();
-    
-    _currentTime = _timer->getCurrentTime();
-    _totalTime   = _timer->getTotalTime();
+//--------------------------------------------------------------
+void example::draw() {
+    float w = ofMap(timer->getCurrentTime(), 0, duration, 0.0, 1.0);
+    ofSetColor(255, 0, 0);
+    ofDrawRectangle(0, 0, w * ofGetWidth(), ofGetHeight());
 }
 
 //--------------------------------------------------------------
-void example::draw(){
-
-    ofSetColor(255);
-    ofDrawBitmapString(caption(), 10, 20);
-}
-
-//--------------------------------------------------------------
-string example::caption()
-{
-    stringstream s;
-    
-    s << ofGetFrameRate() << endl;
-    s << "count : " << _currentCount << " / " << _totalCount << endl;
-    s << "time  : " << _currentTime << " / " << _totalTime << endl;
-    
-    return s.str();
-}
-
-//--------------------------------------------------------------
-void example::timerCompelte(string &name)
-{
-    _currentCount = _timer->getLoopCurrentCount();
-    _totalCount   = _timer->getLoopTotalCount();
-    
-    if(name == "myTimer")
-    {
-        if(_currentCount == _totalCount)
-        {
-            cout << _currentCount << "/" << _totalCount << endl;
-            cout << "[" << name << "] Complete" << endl;
-        }
-        else
-        {
-            cout << _currentCount << "/" << _totalCount << endl;
-        }
-    }
-}
-
-//--------------------------------------------------------------
-void example::keyReleased(int key){
-
-    switch (key)
-    {
+void example::keyReleased(int key) {
+    switch (key) {
         case 's':
-            _timer->start();// start
+            timer->start();  // start
             break;
         case 'r':
-            _timer->reset();// reset
+            timer->reset();  // reset
+            timer->start();  // start
             break;
         case 'p':
-            _timer->pause();// pause
+            timer->pause();  // pause
             break;
-        case 'd':
-            
-            if(DEBUG)
-            {
-                _timer->debugStart();
-            }
-            else
-            {
-                _timer->debugStop();
-            }
-            DEBUG = !DEBUG;
-            
-            break;
-            
         default:
             break;
     }
