@@ -21,7 +21,9 @@ void example::setup() {
 }
 
 //--------------------------------------------------------------
-void example::update() { timer->update(); }
+void example::update() {
+    if (timer->isStarting()) timer->update();
+}
 
 //--------------------------------------------------------------
 void example::draw() {

@@ -18,7 +18,7 @@ class ofxSimpleTimer {
     static ofEvent<string> TIMER_COUNT;
     static ofEvent<string> TIMER_COMPLETE;
 
-    inline bool isPausing() { return flag_update_enabled; };
+    inline bool isStarting() { return flag_update_enabled; };
     inline int getCurrentCount() { return counter; };
     inline int getRepeatCount() { return repeat_count; };
     inline int getDuration() { return duration; };
@@ -32,6 +32,7 @@ class ofxSimpleTimer {
     inline int getLoopTotalCount() { return repeat_count; };  // old method
     inline int getTotalTime() { return duration; };           // old method
     inline int getCurrentTime() { return current_time; };     // old method
+    inline string getName() { return timer_name; };
 
     void setup(string name, int duration, int repeat_count);
     void setName(string name);
