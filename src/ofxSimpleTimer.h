@@ -18,7 +18,7 @@ class ofxSimpleTimer {
     static ofEvent<string> TIMER_COUNT;
     static ofEvent<string> TIMER_COMPLETE;
 
-    inline bool isPausing() { return flag_update_enabled; };
+    inline bool isPausing() { return !flag_update_enabled; };
     inline int getCurrentCount() { return counter; };
     inline int getRepeatCount() { return repeat_count; };
     inline int getDuration() { return duration; };
