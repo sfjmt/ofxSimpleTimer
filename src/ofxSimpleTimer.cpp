@@ -11,6 +11,9 @@ ofEvent<string> ofxSimpleTimer::TIMER_COUNT = ofEvent<string>();
 ofEvent<string> ofxSimpleTimer::TIMER_COMPLETE = ofEvent<string>();
 
 //--------------------------------------------------------------
+void ofxSimpleTimer::setID(int id) { my_id = id; };
+
+//--------------------------------------------------------------
 void ofxSimpleTimer::setName(string name) { timer_name = name; }
 
 //--------------------------------------------------------------

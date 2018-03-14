@@ -1,15 +1,12 @@
-# ofxSimpleTimer
+# Introduction
+This addon is simple timer.
 
-## Summary
+# Compatibility
+oF 0.9.8
 
-simple timer
+# Installation
 
-## Develop Tools
+Copy to your openFrameworks/addons folder.
 
-* xcode version 6.1.1
-* openframeworks 0.9.1
-* BaseSDK OSX 10.10
-
-## Support Platform
-
-* OSX 10.10 Yosemite
+# Dependencies
+None
