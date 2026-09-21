@@ -55,7 +55,7 @@ void ofxSimpleTimer::start() {
         flag_update_enabled = true;
         flag_time_reached = false;
 
-        time_start = ofGetElapsedTimeMillis();
+        time_start = ofxSimpleTimerFrozenClock::nowMillis();
 
         counter = 0;
     }
@@ -73,7 +73,7 @@ void ofxSimpleTimer::setup(string name, int duration, int repeat_count) {
 void ofxSimpleTimer::update() {
     if (flag_update_enabled) {
         if (!flag_time_reached) {
-            current_time = ofGetElapsedTimeMillis() - time_start - time_pause_distance + time_move_distance;
+            current_time = ofxSimpleTimerFrozenClock::nowMillis() - time_start - time_pause_distance + time_move_distance;
 
             if (current_time >= duration) {
                 counter++;
@@ -93,7 +93,7 @@ void ofxSimpleTimer::update() {
                     current_time = 0;
                     time_pause_distance = 0;
                     time_move_distance = 0;
-                    time_start = ofGetElapsedTimeMillis();
+                    time_start = ofxSimpleTimerFrozenClock::nowMillis();
 
                     // notify
                     ofNotifyEvent(TIMER_COUNT, timer_name);
@@ -101,6 +101,6 @@ void ofxSimpleTimer::update() {
             }
         }
     } else {
-        time_pause_distance = (ofGetElapsedTimeMillis() - time_start) - current_time;
+        time_pause_distance = (ofxSimpleTimerFrozenClock::nowMillis() - time_start) - current_time;
     }
 }

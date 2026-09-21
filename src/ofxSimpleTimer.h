@@ -9,7 +9,10 @@
 #define __ofxSimpleTimer__
 
 #include "ofMain.h"
+#include "ofxSimpleTimerFrozenClock.h"
 
+// All timing is read from ofxSimpleTimerFrozenClock, so freezing that clock
+// holds every timer in the process at once (see the header for details).
 class ofxSimpleTimer {
    public:
     ofxSimpleTimer() {
